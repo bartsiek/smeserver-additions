@@ -2,7 +2,7 @@
 # Path: /etc/e-smith/templates-custom/etc/httpd/conf/httpd.conf
 # File: 85HordeAccess
 # ToDo: change https://<servername>/server-manager/cgi-bin/emailsettings
-# Author: Bart Koppers <bart@opencare.nl>
+# Author/editor: Bart Koppers <bart@opencare.nl>
 {
     #--------------------------------------------------------------
     # Dependancy check, only execute horde configuration if PHP is
