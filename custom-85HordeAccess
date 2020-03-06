@@ -1,5 +1,6 @@
 # Purpose: allow access to webmail from ALL hosts that are (remotely) allowed to access the server manager
 # Path: /etc/e-smith/templates-custom/etc/httpd/conf/httpd.conf
+# File: 85HordeAccess
 # ToDo: change https://<servername>/server-manager/cgi-bin/emailsettings
 # Author: Bart Koppers
 {
