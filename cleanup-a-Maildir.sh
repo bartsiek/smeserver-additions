@@ -1,6 +1,17 @@
+#!/bin/bash
 # cleanup Maildir for a user
-# Needs username...
-userdir = $1
-numdays = ${2:-180}
-[ x"$userdir" = "x" ] && (echo "ERROR: specify a username" ; exit) 
-for file in `find /home/$userdir/Maildir -mtime +${numdays} | grep -E '/cur/|/new/'`; do { rm -fv $file; }; done
+# Needs: username...
+# Optional: number of days to keep (default: keep a year)
+USERDIR=$1
+NUMDAYS=${2:-365}
+
+# check arguments
+if [ $# -lt 1 ] ; then
+        echo "illegal number of parameters - specify at least a username"
+        exit
+fi
+# need some additional checking - l8ter... :)
+
+eval cd ~$USERDIR
+for file in `find Maildir -mtime +${NUMDAYS} | grep -E '/cur/|/new/'`; do { rm -fv $file; }; done
+
