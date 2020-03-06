@@ -1,0 +1,83 @@
+# Purpose: allow access to webmail from ALL hosts that are (remotely) allowed to access the server manager
+# Path: /etc/e-smith/templates-custom/etc/httpd/conf/httpd.conf
+# ToDo: change https://<servername>/server-manager/cgi-bin/emailsettings
+# Author: Bart Koppers
+{
+    #--------------------------------------------------------------
+    # Dependancy check, only execute horde configuration if PHP is
+    # enabled.
+    #--------------------------------------------------------------
+
+    my $PHPStatus = $php{"status"};
+    my $status = $horde{'status'};
+    my $access = $horde{'access'};
+
+    if (!defined $PHPStatus or $PHPStatus ne 'enabled')
+    {
+        $OUT .= "# Error: horde is enabled but PHP is not enabled.";
+    }
+    elsif (defined $status && $status eq 'enabled')
+    {
+        $OUT .= qq(
+# Horde specific configuration files.
+
+<Directory /home/httpd/html/horde>
+    <FilesMatch "test.php\$">
+    Order Deny,Allow
+    Deny from all
+    </FilesMatch>
+    Options Indexes Includes FollowSymLinks
+    AllowOverride None
+    order deny,allow
+    deny from all
+);
+        if ($access eq 'public' )
+        {
+        $OUT .= "    allow from all";
+        }
+        else
+        {
+        $OUT .= "    allow from $localAccess $externalSSLAccess";
+        }
+       $OUT .= "\n";
+       $OUT .= qq(
+    AddType application/x-httpd-php .php .php3
+    php_value include_path           '/usr/share/pear-addons:/usr/share/pear'
+    php_flag  magic_quotes_gpc       off
+    php_flag  track_vars             on
+    php_flag  session.use_trans_sid  off
+    php_admin_flag  allow_url_fopen  on
+</Directory>
+
+<Directory /home/httpd/html/horde/config>
+    order deny,allow
+    deny from all
+</Directory>
+
+<Directory /home/httpd/html/horde/lib>
+    order deny,allow
+    deny from all
+</Directory>
+
+<Directory /home/httpd/html/horde/locale>
+    order deny,allow
+    deny from all
+</Directory>
+
+<Directory /home/httpd/html/horde/templates>
+    order deny,allow
+    deny from all
+</Directory>
+
+<Directory /home/httpd/html/horde/scripts>
+    order deny,allow
+    deny from all
+</Directory>
+
+);
+    }
+    else
+    {
+        $OUT .= "# horde not configured as it is disabled in the config db";
+    }
+}
